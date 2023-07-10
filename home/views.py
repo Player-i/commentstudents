@@ -61,6 +61,13 @@ def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
+            caption = form.cleaned_data['caption']
+            
+            # Check if a post with the same caption already exists
+            if Post.objects.filter(caption=caption).exists():
+                error_message = "A post with the same caption already exists."
+                return render(request, 'create.html', {'form': form, 'error_message': error_message})
+            
             post = form.save(commit=False)
             post.author = request.user
             post.save()
@@ -70,7 +77,6 @@ def create_post(request):
     
     context = {'form': form}
     return render(request, 'create.html', context)
-
 
 def add_comment(request, post_id):
     post = get_object_or_404(Post, pk=post_id)

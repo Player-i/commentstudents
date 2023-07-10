@@ -4,6 +4,11 @@
 <div class="container">
     <div class="post-form-container">
         <h2>Create New Roast</h2>
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+        {% endif %}
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -23,7 +28,6 @@
                 <label for="{{ form.caption.id_for_label }}">Roasting Who?</label>
                 <div class="caption-input">
                     {{ form.caption }}
-                    <span class="caption-placeholder">Full Name pls</span>
                 </div>
                 {% if form.caption.errors %}
                 <small class="text-danger">{{ form.caption.errors }}</small>
