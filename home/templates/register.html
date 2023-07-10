@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="register-form-container">
+        <h2>Create An Account</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Pseudonym (Nobody is going to see this)</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <small class="text-danger">{{ form.username.errors }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email (Do not use your duq email pls)</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <small class="text-danger">{{ form.email.errors }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <small class="text-danger">{{ form.password1.errors }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <small class="text-danger">{{ form.password2.errors }}</small>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+    </div>
+    <p class="login-link">Already have an account? <a href="/login/">Log in</a></p>
+</div>
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .register-form-container {
+        background-color: #ffffff;
+        border: 1px solid #dbdbdb;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #8a00b8;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+  }
+  
+  .login-link a {
+      color: #8a00b8;
+      text-decoration: none;
+  }
+</style>
+{% endblock %}

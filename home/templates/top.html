@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock  %}
+
+{% block head %}
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fafafa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .post-container {
+        background-color: #ffffff;
+        border: 1px solid #dbdbdb;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .post-caption {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .post-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .post-comments {
+        padding: 10px;
+    }
+
+    .add-roast {
+        font-weight: bold;
+        color: #262626;
+        cursor: pointer;
+        margin-top: 2px;
+        padding: 10px;
+    }
+
+    .comment-form {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .post-container.show-comments .comment-form {
+        display: block;
+    }
+
+    .comment-input {
+        width: 100%;
+        border: none;
+        background-color: #fafafa;
+        padding: 10px;
+        margin-top: 10px;
+        resize: none;
+    }
+
+    .comment-input:focus {
+        outline: none;
+    }
+
+    .comment-input::placeholder {
+        color: #999999;
+    }
+
+    .pill-container {
+        background-color: #fafafa;
+        border: 1px solid #dbdbdb;
+        border-radius: 20px;
+        display: inline-block;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        max-width: 30%;
+        margin: 0 auto;
+    }
+
+    .pill-link {
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 8px 16px;
+        color: #262626;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .pill-link.active {
+        color: #ffffff;
+        background-color: #8a00b8;
+        border-radius: 20px;
+    }
+</style>
+{% endblock  %}
+
+{% block content %}
+    <div class="pill-container">
+        {% if user.is_authenticated %}
+            <a href="/" class="pill-link">New</a>
+            <a href="/top" class="pill-link active">Top</a>
+        {% else %}
+            <a href="/register/" class="pill-link">New</a>
+            <a href="/register/" class="pill-link active">Top</a>
+        {% endif %}
+
+    </div>
+
+    <div class="container">
+
+        {% comment %} {% if user.is_authenticated %}
+            <a href="/logout/">Logout</a>
+            <a href="/create/">Post</a>
+        {% else %}
+            <a href="/login/">Login</a>
+            <a href="/register/">
+                <p>Make an account</p>
+            </a>
+        {% endif %} {% endcomment %}
+    
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post-container">
+                    <div class="post-caption">{{ post.caption }}</div>
+                    <img class="post-image" src="{{ post.picture.url }}" alt="Post Picture">
+                    <div class="post-comments">
+
+                        {% if user.is_authenticated %}
+                            {% for comment in comments %}
+                                {% if comment.post == post  %}
+                                    <p>{{ comment.content }}</p>
+                                {% endif %}
+                            {% empty %}
+                                <p>No comments yet.</p>
+                            {% endfor %}
+                            {% else %}
+                            <p><a href="/register/">See comments</a></p>
+                            {% endif %}
+
+                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="add-roast"><p>Roast</p></div>
+                        <form class="comment-form" method="POST" action="{% url 'add_comment' post_id=post.id %}">
+                            {% csrf_token %}
+                            <textarea name="content" class="comment-input" placeholder="Add a comment..." required></textarea>
+                        </form>
+                    {% else %}
+                        <div class="add-roast"><a href="/register/" >Roast</a></div>
+
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts found.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const addRoast = document.querySelectorAll('.add-roast');
+        addRoast.forEach((roast) => {
+            roast.addEventListener('click', () => {
+                const container = roast.closest('.post-container');
+                container.classList.toggle('show-comments');
+            });
+        });
+
+        const commentInputs = document.querySelectorAll('.comment-input');
+        commentInputs.forEach((input) => {
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    const form = input.closest('form');
+                    form.submit();
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,1 @@
+web gunicorn longevitydb.wsgi:application --log-file -

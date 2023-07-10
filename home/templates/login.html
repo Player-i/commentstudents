@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block head %}
+<style>
+    /* Styles for the login form */
+    
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+    }
+    
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    input[type="text"]::-webkit-input-placeholder,
+    input[type="password"]::-webkit-input-placeholder {
+        color: #999999;
+    }
+    
+    input[type="text"]:-moz-placeholder,
+    input[type="password"]:-moz-placeholder {
+        color: #999999;
+    }
+    
+    input[type="text"]::-moz-placeholder,
+    input[type="password"]::-moz-placeholder {
+        color: #999999;
+    }
+    
+    input[type="text"]:-ms-input-placeholder,
+    input[type="password"]:-ms-input-placeholder {
+        color: #999999;
+    }
+    
+    button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #8a00b8;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .register-link a {
+        color: #8a00b8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        
+        <h2>Login</h2>
+        
+        <div>
+            <label for="{{ form.username.id_for_label }}">Email:</label>
+            {{ form.username }}
+        </div>
+        
+        <div>
+            <label for="{{ form.password.id_for_label }}">Password:</label>
+            {{ form.password }}
+        </div>
+        
+        <button type="submit">Login</button>
+        
+        <div class="register-link">
+            Don't have an account? <a href="/register/" class="purple-link">Register</a>
+        </div>
+    </form>
+{% endblock %}

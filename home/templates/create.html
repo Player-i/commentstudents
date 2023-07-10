@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="post-form-container">
+        <h2>Create New Roast</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.picture.id_for_label }}">Picture:</label>
+                <div class="file-input">
+                    <input type="file" id="{{ form.picture.id_for_label }}" name="{{ form.picture.html_name }}">
+                    <label for="{{ form.picture.id_for_label }}"><i class="bi bi-camera"></i> Choose Photo</label>
+                    <span>No photo chosen</span>
+                </div>
+                {% if form.picture.errors %}
+                <small class="text-danger">{{ form.picture.errors }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.caption.id_for_label }}">Roasting Who?</label>
+                <div class="caption-input">
+                    {{ form.caption }}
+                    <span class="caption-placeholder">Full Name pls</span>
+                </div>
+                {% if form.caption.errors %}
+                <small class="text-danger">{{ form.caption.errors }}</small>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .post-form-container {
+        background-color: #ffffff;
+        border: 1px solid #dbdbdb;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .file-input {
+        position: relative;
+    }
+
+    .file-input input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .file-input label {
+        display: inline-block;
+        background-color: #8a00b8;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .file-input span {
+        margin-left: 10px;
+        font-weight: bold;
+    }
+
+    .caption-input {
+        position: relative;
+    }
+
+    .caption-input textarea {
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        resize: none;
+    }
+
+    .caption-input .caption-placeholder {
+        position: absolute;
+        top: 3px;
+        left: 15px;
+        color: #999999;
+    }
+
+    .btn-primary {
+        background-color: #8a00b8;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
