@@ -1,1 +1,1 @@
-web gunicorn longevitydb.wsgi:application --log-file -
+web gunicorn commentstudents.wsgi:application --log-file -
