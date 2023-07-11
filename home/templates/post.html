@@ -5,30 +5,174 @@
 {% endblock %}
 
 {% block head %}
+<style>
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #fafafa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .post-container {
+        background-color: #ffffff;
+        border: 1px solid #dbdbdb;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .post-caption {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .post-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .post-comments {
+        padding: 10px;
+    }
+
+    .add-roast {
+        font-weight: bold;
+        color: #262626;
+        cursor: pointer;
+        margin-top: 2px;
+        padding: 10px;
+    }
+
+    .comment-form {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .post-container.show-comments .comment-form {
+        display: block;
+    }
+
+    .comment-input {
+        width: 100%;
+        border: none;
+        background-color: #fafafa;
+        padding: 10px;
+        margin-top: 10px;
+        resize: none;
+    }
+
+    .comment-input:focus {
+        outline: none;
+    }
+
+    .comment-input::placeholder {
+        color: #999999;
+    }
+
+    .share-button {
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 8px 16px;
+        color: #262626;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        margin-top: -15px;
+        display: inline-block;
+    }
+
+    .share-button:hover {
+        background-color: #f5f5f5;
+    }
+
+    .button-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+
+</style>
 
 {% endblock %}
     
 
 {% block content %}
-        <h3>{{ post.caption }}</h3>
-        <p>Author: {{ post.author.username }} || {{ post.picture.url }}</p>
-        <img src="{{ post.picture.url }}/" alt="Post Picture">
-        <!-- Display other post details as needed -->
-        <h3>Comments</h3>
-        <h3>Add a Comment</h3>
-            <form method="POST" action="{% url 'add_comment' post_id=post.id %}">
-            {% csrf_token %}
-                <textarea name="content" rows="4" cols="50" required></textarea>
-                <br>
-            <input type="submit" value="Submit">
-            </form>
+<div class="post-container">
+    <div class="post-caption">{{ post.caption }}</div>
+    <img class="post-image" src="{{ post.picture.url }}" alt="Post Picture">
+    <div class="post-comments">
+
+        {% if user.is_authenticated %}
+
             {% for comment in comments %}
-                    
                 {% if comment.post == post  %}
-                        <p>{{ comment.content }}</p>
+                    <p>{{ comment.content }}</p>
                 {% endif %}
             {% empty %}
-            <p>No comments yet.</p>
+                <p>No comments yet.</p>
             {% endfor %}
+
+         {% else %}
+            <p><a href="/register/">See comments</a></p>
+        {% endif %} 
+
+
+    </div>
+    {% if user.is_authenticated %}
+    <div class="button-container">
+        <div class="add-roast"><p>Roast</p></div>
+        <button class="share-button" onclick="copyLink('{{ post.get_absolute_url }}/{{post.id}}')">Share</button>
         
+    </div>
+        <form class="comment-form" method="POST" action="{% url 'add_comment' post_id=post.id %}">
+            {% csrf_token %}
+            <textarea name="content" class="comment-input" placeholder="Add a comment..." required></textarea>
+        </form>
+    {% else %}
+        <div class="add-roast"><a href="/register/" >Roast</a></div>
+
+    {% endif %}
+
+</div>
+    
+<script>
+    const addRoast = document.querySelectorAll('.add-roast');
+    addRoast.forEach((roast) => {
+        roast.addEventListener('click', () => {
+            const container = roast.closest('.post-container');
+            container.classList.toggle('show-comments');
+        });
+    });
+
+    const commentInputs = document.querySelectorAll('.comment-input');
+    commentInputs.forEach((input) => {
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                const form = input.closest('form');
+                form.submit();
+            }
+        });
+    });
+
+    function copyLink(url) {
+        const el = document.createElement('textarea');
+        el.value = window.location.origin + url;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert('Link copied!');
+    }
+</script>
 {% endblock %}

@@ -102,6 +102,30 @@
         background-color: #8a00b8;
         border-radius: 20px;
     }
+
+    .share-button {
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 8px 16px;
+        color: #262626;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        margin-top: -15px;
+        display: inline-block;
+    }
+
+    .share-button:hover {
+        background-color: #f5f5f5;
+    }
+
+    .button-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 </style>
 {% endblock %}
 
@@ -131,7 +155,11 @@
 
         </div>
         {% if user.is_authenticated %}
+        <div class="button-container">
             <div class="add-roast"><p>Roast</p></div>
+            <button class="share-button" onclick="copyLink('{{ post.get_absolute_url }}/{{post.id}}')">Share</button>
+            
+        </div>
             <form class="comment-form" method="POST" action="{% url 'add_comment' post_id=post.id %}">
                 {% csrf_token %}
                 <textarea name="content" class="comment-input" placeholder="Add a comment..." required></textarea>
@@ -168,6 +196,16 @@
                 }
             });
         });
+
+        function copyLink(url) {
+            const el = document.createElement('textarea');
+            el.value = window.location.origin + url;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Link copied!');
+        }
     </script>
 
 {% endblock %}
