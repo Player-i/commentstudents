@@ -15,9 +15,9 @@
             <div class="form-group">
                 <label for="{{ form.picture.id_for_label }}">Picture:</label>
                 <div class="file-input">
-                    <input type="file" id="{{ form.picture.id_for_label }}" name="{{ form.picture.html_name }}">
+                    <input type="file" id="{{ form.picture.id_for_label }}" name="{{ form.picture.html_name }}" onchange="updatePhotoChosen(this)">
                     <label for="{{ form.picture.id_for_label }}"><i class="bi bi-camera"></i> Choose Photo</label>
-                    <span>No photo chosen</span>
+                    <span id="photo-chosen">No photo chosen</span>
                 </div>
                 {% if form.picture.errors %}
                 <small class="text-danger">{{ form.picture.errors }}</small>
@@ -119,5 +119,22 @@
         border-radius: 5px;
         cursor: pointer;
     }
+
+    .file-input span.photo-chosen {
+        display: none;
+        margin-left: 10px;
+        font-weight: bold;
+    }
 </style>
+
+<script>
+    function updatePhotoChosen(input) {
+        const span = document.getElementById('photo-chosen');
+        if (input.files.length > 0) {
+            span.innerHTML = 'Photo chosen';;
+        } else {
+            span.innerHTML = 'No photo chosen';
+        }
+    }
+</script>
 {% endblock %}
